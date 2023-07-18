@@ -94,10 +94,10 @@ int WildMatch(char *src,char *dest)
             args[ArgCount]=wrd;
             argtype[ArgCount++]='D';
             }
-        else if (bs=='N' || bs=='B' || bs=='W' || bs=='(') {
+        else if (bs=='N' || bs=='B' || bs=='8' || bs=='W' || bs=='(') {
           if (bs=='N') bitlength=4;
           if (bs=='B') bitlength=8;
-          if (bs=='W') bitlength=16;
+          if (bs=='W'|| bs=='8') bitlength=16;
           if (bs=='(') {
             bitlength=char_to_hex(*src++); src++;
             bs='W';
@@ -340,6 +340,15 @@ void Translate(int Entry)
         B=B*16+(args[i] & 15);
         noout = ' ';
         }
+      if (argtype[i]=='8') {
+	if ((pass==2)&&((address&0xFF00)!=(args[i]&0xFF00)))
+	  {
+	    errorOut("*** Possible illegal displacement");
+	    errs++;
+	  }
+	B=(args[i]&255);
+	noout=' ';
+      }
       if (argtype[i]=='B') {
         B=(args[i] & 255);
         noout = ' ';

@@ -1,3 +1,20 @@
+Modified by Al Williams
+------------------
+Adds '8' instruction type which is an address that is on the same page as the current address.
+If it isn't you get a warning. This is used in the 1802.def (updated) to catch bad branches.
+
+For example:
+
+   ORG 0
+   BR start
+   ORG 100
+start:
+
+// this will generate 30 00 which isn't what you want here.
+
+------------------------
+
+
 Command Line Options:
 -h      Output in Intel Hex format
 -l      Show listing
