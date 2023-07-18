@@ -99,7 +99,8 @@ void make_label()
 {
   int i;
   char flag;
-  char buffer[60];
+  // This buffer has to be large for error meessages
+  char buffer[1200];
 #ifdef DEBUG
   doIndent();
   printf("entering: make_label()\n");
@@ -404,7 +405,8 @@ void readOptions(char *buffer) {
   if (strcmp(buffer,"-v")==0) verbose='Y';
   if (strcmp(buffer,"-V")==0) {
     printf("RC/asm v%2.1f%s",VERSION,EOL);
-    printf("by Michael H. Riley%s%s",EOL,EOL);
+    printf("by Michael H. Riley%s",EOL);
+    printf("Mods by Al Williams (version gnr2)" EOL EOL);
     }
   if (strcmp(buffer,"-x")==0) doxref='Y';
   if (strncmp(buffer,"-d",2)==0) {
@@ -644,6 +646,30 @@ void asmPass(int p) {
     }
   }
 
+void help(void)
+{
+  fprintf(stderr,
+	  "rcasm - by Michael Riley: https://github.com/rileym65/RcAsm" EOL
+	  "version gnr2 - by Al Williams: https://github.com/wd5gnr/RcAsm" EOL EOL
+	  "-h      Output in Intel Hex format" EOL
+	  "-l      Show listing" EOL
+	  "-s      Show symbols" EOL
+	  "-t      Suppres trailing information" EOL
+	  "-Sl     Sort label reference by line" EOL
+	  "-Sa     Sort label reference alphabetically" EOL
+	  "-u      Force output to uppercase" EOL
+	  "-V      Show Version" EOL
+	  "-v      Verbose output" EOL
+	  "-x      Show cross reference" EOL
+	  "-d name Specify assembly definition file" EOL
+	  "-r      Show rule that provided assembly match" EOL
+	  "        this is used for debugging def files" EOL
+	  "-Dsym=val Define a preprocessor symbol" EOL EOL
+	  "Default options read from rcasm.rc and $RCASM_OPTIONS" EOL
+	  );
+}
+
+
 int main(int argc,char** argv,char** env) {
   FILE *inifile;
   char mbuffer[30];
@@ -690,7 +716,12 @@ int main(int argc,char** argv,char** env) {
     ebuffer[i] = 0;
     if (strlen(ebuffer) > 0) readOptions(ebuffer);
     }
-  if (argc>0) 
+  if (argc==1)
+    {
+      help();
+      return 1;
+    }
+  if (argc>1) 
     for (i=1;i<argc;i++)
       {
         if (strcmp(argv[i], "-d") == 0) {

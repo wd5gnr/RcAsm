@@ -400,7 +400,7 @@ void Translate(int Entry)
 void asm_cmd()
 {
   char tbuffer[255];
-  char ebuffer[255];
+  char ebuffer[384];  // large for error message
   word i;
   char *src;
   char *dst;
